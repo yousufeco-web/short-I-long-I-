@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Short I and Long I Sorting</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
+            background-color: #f0f8ff;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+        }
+
+        .instructions {
+            font-size: 1.2em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .drop-zone {
+            width: 300px;
+            min-height: 400px;
+            background-color: white;
+            border: 4px solid #333;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Distinct border colors matching the worksheet */
+        #short-i {
+            border-color: #d13076;
+        }
+        
+        #long-i {
+            border-color: #3cb4c6;
+        }
+
+        .drop-zone h2 {
+            font-size: 2em;
+            margin: 10px 0 5px 0;
+        }
+
+        #short-i h2 {
+            color: #d13076;
+        }
+
+        #long-i h2 {
+            color: #3cb4c6;
+        }
+
+        .drop-zone p {
+            margin: 0 0 20px 0;
+            font-size: 1.2em;
+            color: #666;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+            width: 80%;
+        }
+
+        /* Container for the items when dropped */
+        .dropped-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .item-bank {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            min-height: 120px;
+            padding: 20px;
+            border: 3px dashed #aaa;
+            border-radius: 20px;
+            background-color: #fff;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .draggable {
+            width: 100px;
+            height: 120px;
+            background-color: white;
+            border: 2px dashed #888;
+            border-radius: 10px;
+            cursor: grab;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .draggable:active {
+            cursor: grabbing;
+        }
+
+        .draggable img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            pointer-events: none; /* Prevents dragging just the image */
+        }
+
+        /* Animations */
+        @keyframes shake {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
+            100% { transform: translateX(0); }
+        }
+
+        .shake {
+            animation: shake 0.5s;
+            border-color: red !important;
+        }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .pop {
+            animation: pop 0.5s;
+            border-color: #4CAF50 !important;
+            border-style: solid;
+        }
+
+        #play-again {
+            display: none;
+            margin-top: 30px;
+            padding: 15px 40px;
+            font-size: 1.5em;
+            font-family: inherit;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+            transition: transform 0.2s;
+        }
+
+        #play-again:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Sorting: Short I and Long I</h1>
+    <p class="instructions">Click a picture to hear the word. Drag and drop the pictures into the correct column!</p>
+
+    <div class="board">
+        <div class="drop-zone" id="short-i" data-target="short">
+            <h2>Short I</h2>
+            <p>Words with the<br>short i sound</p>
+            <div class="dropped-items"></div>
+        </div>
+
+        <div class="drop-zone" id="long-i" data-target="long">
+            <h2>Long I</h2>
+            <p>Words with the<br>long i sound</p>
+            <div class="dropped-items"></div>
+        </div>
+    </div>
+
+    <div class="item-bank" id="item-bank">
+        <div class="draggable" draggable="true" id="item-kit" data-type="short">
+            <img src="kit.png" alt="kit">
+            <span>kit</span>
+        </div>
+        <div class="draggable" draggable="true" id="item-kite" data-type="long">
+            <img src="kite.png" alt="kite">
+            <span>kite</span>
+        </div>
+        <div class="draggable" draggable="true" id="item-rip" data-type="short">
+            <img src="rip.png" alt="rip">
+            <span>rip</span>
+        </div>
+        <div class="draggable" draggable="true" id="item-ripe" data-type="long">
+            <img src="ripe.png" alt="ripe">
+            <span>ripe</span>
+        </div>
+        <div class="draggable" draggable="true" id="item-light" data-type="long">
+            <img src="light.png" alt="light">
+            <span>light</span>
+        </div>
+        <div class="draggable" draggable="true" id="item-sit" data-type="short">
+            <img src="sit.png" alt="sit">
+            <span>sit</span>
+        </div>
+    </div>
+
+    <button id="play-again" onclick="resetGame()">Play Again!</button>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const itemBank = document.getElementById('item-bank');
+        const playAgainBtn = document.getElementById('play-again');
+        let totalItems = draggables.length;
+        let correctlyPlaced = 0;
+
+        // --- Audio Setup ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Synthesize a buzzer sound for wrong answers
+        function playWrongSound() {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            oscillator.type = 'sawtooth';
+            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
+            
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 0.3);
+        }
+
+        // Use Web Speech API for reading words and saying "Correct"
+        function speakWord(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9; // Slightly slower for kindergarteners
+            utterance.pitch = 1.2; // Slightly higher pitch
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // --- Drag and Drop Logic ---
+        draggables.forEach(draggable => {
+            // Click to hear the word
+            draggable.addEventListener('click', () => {
+                const word = draggable.querySelector('span').innerText;
+                speakWord(word);
+            });
+
+            draggable.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', draggable.id);
+                draggable.classList.remove('shake', 'pop'); // clear old animations
+            });
+        });
+
+        dropZones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault(); // Necessary to allow dropping
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const draggableId = e.dataTransfer.getData('text/plain');
+                const draggableElement = document.getElementById(draggableId);
+                const itemType = draggableElement.getAttribute('data-type');
+                const zoneType = zone.getAttribute('data-target');
+
+                if (itemType === zoneType) {
+                    // Correct Drop
+                    speakWord("Correct!");
+                    zone.querySelector('.dropped-items').appendChild(draggableElement);
+                    draggableElement.classList.add('pop');
+                    draggableElement.setAttribute('draggable', 'false'); // Lock it in place
+                    correctlyPlaced++;
+                    checkWin();
+                } else {
+                    // Wrong Drop
+                    playWrongSound();
+                    draggableElement.classList.add('shake');
+                    
+                    // Remove shake class after animation finishes so it can shake again
+                    setTimeout(() => {
+                        draggableElement.classList.remove('shake');
+                    }, 500);
+                }
+            });
+        });
+
+        function checkWin() {
+            if (correctlyPlaced === totalItems) {
+                setTimeout(() => {
+                    speakWord("Great job! You sorted all the words!");
+                    playAgainBtn.style.display = "inline-block";
+                }, 1000);
+            }
+        }
+
+        function resetGame() {
+            correctlyPlaced = 0;
+            playAgainBtn.style.display = "none";
+            
+            // Move all items back to the bank and make them draggable again
+            draggables.forEach(draggable => {
+                itemBank.appendChild(draggable);
+                draggable.setAttribute('draggable', 'true');
+                draggable.classList.remove('pop', 'shake');
+            });
+            
+            // Randomize order slightly in the item bank
+            for (let i = itemBank.children.length; i >= 0; i--) {
+                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
+            }
+        }
+    </script>
+</body>
+</html>
