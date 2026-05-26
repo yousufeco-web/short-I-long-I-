@@ -17,6 +17,15 @@
         h1 {
             color: #333;
             font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        #page-indicator {
+            font-size: 1.5em;
+            color: #666;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-weight: bold;
         }
 
         .instructions {
@@ -154,7 +163,7 @@
             border-style: solid;
         }
 
-        #play-again {
+        #action-btn {
             display: none;
             margin-top: 30px;
             padding: 15px 40px;
@@ -169,7 +178,7 @@
             transition: transform 0.2s;
         }
 
-        #play-again:hover {
+        #action-btn:hover {
             transform: scale(1.05);
         }
     </style>
@@ -177,6 +186,7 @@
 <body>
 
     <h1>Sorting: Short I and Long I</h1>
+    <div id="page-indicator">Page 1 of 2</div>
     <p class="instructions">Click a picture to hear the word. Drag and drop the pictures into the correct column!</p>
 
     <div class="board">
@@ -193,47 +203,45 @@
         </div>
     </div>
 
-    <div class="item-bank" id="item-bank">
-        <div class="draggable" draggable="true" id="item-kit" data-type="short">
-            <img src="kit.png" alt="kit">
-            <span>kit</span>
-        </div>
-        <div class="draggable" draggable="true" id="item-kite" data-type="long">
-            <img src="kite.png" alt="kite">
-            <span>kite</span>
-        </div>
-        <div class="draggable" draggable="true" id="item-rip" data-type="short">
-            <img src="rip.png" alt="rip">
-            <span>rip</span>
-        </div>
-        <div class="draggable" draggable="true" id="item-ripe" data-type="long">
-            <img src="ripe.png" alt="ripe">
-            <span>ripe</span>
-        </div>
-        <div class="draggable" draggable="true" id="item-light" data-type="long">
-            <img src="light.png" alt="light">
-            <span>light</span>
-        </div>
-        <div class="draggable" draggable="true" id="item-sit" data-type="short">
-            <img src="sit.png" alt="sit">
-            <span>sit</span>
-        </div>
-    </div>
+    <div class="item-bank" id="item-bank"></div>
 
-    <button id="play-again" onclick="resetGame()">Play Again!</button>
+    <button id="action-btn" onclick="handleActionClick()">Next Page!</button>
 
     <script>
-        const draggables = document.querySelectorAll('.draggable');
-        const dropZones = document.querySelectorAll('.drop-zone');
-        const itemBank = document.getElementById('item-bank');
-        const playAgainBtn = document.getElementById('play-again');
-        let totalItems = draggables.length;
+        // Game Pages Data Configuration
+        const gamePages = [
+            // Page 1 Words
+            [
+                { id: "item-kit", word: "kit", type: "short", img: "kit.png" },
+                { id: "item-kite", word: "kite", type: "long", img: "kite.png" },
+                { id: "item-rip", word: "rip", type: "short", img: "rip.png" },
+                { id: "item-ripe", word: "ripe", type: "long", img: "ripe.png" },
+                { id: "item-light", word: "light", type: "long", img: "light.png" },
+                { id: "item-sit", word: "sit", type: "short", img: "sit.png" }
+            ],
+            // Page 2 Words
+            [
+                { id: "item-tin", word: "tin", type: "short", img: "tin.png" },
+                { id: "item-mice", word: "mice", type: "long", img: "mice.png" },
+                { id: "item-lid", word: "lid", type: "short", img: "lid.png" },
+                { id: "item-bike", word: "bike", type: "long", img: "bike.png" },
+                { id: "item-pig", word: "pig", type: "short", img: "pig.png" },
+                { id: "item-fire", word: "fire", type: "long", img: "fire.png" }
+            ]
+        ];
+
+        let currentPageIndex = 0;
+        let totalItems = 0;
         let correctlyPlaced = 0;
+
+        const itemBank = document.getElementById('item-bank');
+        const dropZones = document.querySelectorAll('.drop-zone');
+        const actionBtn = document.getElementById('action-btn');
+        const pageIndicator = document.getElementById('page-indicator');
 
         // --- Audio Setup ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // Synthesize a buzzer sound for wrong answers
         function playWrongSound() {
             if (audioCtx.state === 'suspended') audioCtx.resume();
             const oscillator = audioCtx.createOscillator();
@@ -253,37 +261,78 @@
             oscillator.stop(audioCtx.currentTime + 0.3);
         }
 
-        // Use Web Speech API for reading words and saying "Correct"
         function speakWord(text) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9; // Slightly slower for kindergarteners
-            utterance.pitch = 1.2; // Slightly higher pitch
+            utterance.rate = 0.9; 
+            utterance.pitch = 1.2; 
             window.speechSynthesis.speak(utterance);
         }
 
+        // --- Setup Page Level ---
+        function loadPage(pageIndex) {
+            // Reset counters
+            correctlyPlaced = 0;
+            actionBtn.style.display = "none";
+            
+            // Update Text Indicators
+            pageIndicator.innerText = `Page ${pageIndex + 1} of ${gamePages.length}`;
+            
+            // Clear drop zones
+            dropZones.forEach(zone => {
+                zone.querySelector('.dropped-items').innerHTML = '';
+            });
+
+            // Clear and populate Item Bank
+            itemBank.innerHTML = '';
+            const currentWords = gamePages[pageIndex];
+            totalItems = currentWords.length;
+
+            // Generate items dynamically
+            currentWords.forEach(item => {
+                const element = document.createElement('div');
+                element.className = 'draggable';
+                element.setAttribute('draggable', 'true');
+                element.id = item.id;
+                element.setAttribute('data-type', item.type);
+
+                element.innerHTML = `
+                    <img src="${item.img}" alt="${item.word}">
+                    <span>${item.word}</span>
+                `;
+
+                // Add Click Event to hear the word
+                element.addEventListener('click', () => {
+                    speakWord(item.word);
+                });
+
+                // Add Drag Start Event
+                element.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', element.id);
+                    element.classList.remove('shake', 'pop'); 
+                });
+
+                itemBank.appendChild(element);
+            });
+
+            // Randomize order inside the item bank
+            for (let i = itemBank.children.length; i >= 0; i--) {
+                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
+            }
+        }
+
         // --- Drag and Drop Logic ---
-        draggables.forEach(draggable => {
-            // Click to hear the word
-            draggable.addEventListener('click', () => {
-                const word = draggable.querySelector('span').innerText;
-                speakWord(word);
-            });
-
-            draggable.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', draggable.id);
-                draggable.classList.remove('shake', 'pop'); // clear old animations
-            });
-        });
-
         dropZones.forEach(zone => {
             zone.addEventListener('dragover', (e) => {
-                e.preventDefault(); // Necessary to allow dropping
+                e.preventDefault(); 
             });
 
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 const draggableId = e.dataTransfer.getData('text/plain');
                 const draggableElement = document.getElementById(draggableId);
+                
+                if (!draggableElement) return;
+
                 const itemType = draggableElement.getAttribute('data-type');
                 const zoneType = zone.getAttribute('data-target');
 
@@ -292,7 +341,7 @@
                     speakWord("Correct!");
                     zone.querySelector('.dropped-items').appendChild(draggableElement);
                     draggableElement.classList.add('pop');
-                    draggableElement.setAttribute('draggable', 'false'); // Lock it in place
+                    draggableElement.setAttribute('draggable', 'false'); // Lock it
                     correctlyPlaced++;
                     checkWin();
                 } else {
@@ -300,7 +349,6 @@
                     playWrongSound();
                     draggableElement.classList.add('shake');
                     
-                    // Remove shake class after animation finishes so it can shake again
                     setTimeout(() => {
                         draggableElement.classList.remove('shake');
                     }, 500);
@@ -311,28 +359,32 @@
         function checkWin() {
             if (correctlyPlaced === totalItems) {
                 setTimeout(() => {
-                    speakWord("Great job! You sorted all the words!");
-                    playAgainBtn.style.display = "inline-block";
+                    if (currentPageIndex < gamePages.length - 1) {
+                        speakWord("Great job! You finished this page!");
+                        actionBtn.innerText = "Next Page!";
+                    } else {
+                        speakWord("Great job! You sorted all the words!");
+                        actionBtn.innerText = "Play Again!";
+                    }
+                    actionBtn.style.display = "inline-block";
                 }, 1000);
             }
         }
 
-        function resetGame() {
-            correctlyPlaced = 0;
-            playAgainBtn.style.display = "none";
-            
-            // Move all items back to the bank and make them draggable again
-            draggables.forEach(draggable => {
-                itemBank.appendChild(draggable);
-                draggable.setAttribute('draggable', 'true');
-                draggable.classList.remove('pop', 'shake');
-            });
-            
-            // Randomize order slightly in the item bank
-            for (let i = itemBank.children.length; i >= 0; i--) {
-                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
+        function handleActionClick() {
+            if (currentPageIndex < gamePages.length - 1) {
+                // Move to Page 2
+                currentPageIndex++;
+                loadPage(currentPageIndex);
+            } else {
+                // Reset back to Page 1
+                currentPageIndex = 0;
+                loadPage(currentPageIndex);
             }
         }
+
+        // Initialize the game with the first page load
+        loadPage(currentPageIndex);
     </script>
 </body>
 </html>
