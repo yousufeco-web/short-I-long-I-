@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short I and Long I Sorting</title>
+    <title>Short O and Long O Sorting</title>
     <style>
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
-            background-color: #f0f8ff;
+            background-color: #f7f9fa;
             text-align: center;
             margin: 0;
             padding: 20px;
@@ -18,14 +18,6 @@
             color: #333;
             font-size: 2.5em;
             margin-bottom: 5px;
-        }
-
-        #page-indicator {
-            font-size: 1.5em;
-            color: #666;
-            margin-top: 0;
-            margin-bottom: 15px;
-            font-weight: bold;
         }
 
         .instructions {
@@ -54,13 +46,13 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        /* Distinct border colors matching the worksheet */
-        #short-i {
-            border-color: #d13076;
+        /* Distinct border colors for Short O and Long O */
+        #short-o {
+            border-color: #e67e22; /* Vibrant Orange */
         }
         
-        #long-i {
-            border-color: #3cb4c6;
+        #long-o {
+            border-color: #8e44ad; /* Vibrant Purple */
         }
 
         .drop-zone h2 {
@@ -68,12 +60,12 @@
             margin: 10px 0 5px 0;
         }
 
-        #short-i h2 {
-            color: #d13076;
+        #short-o h2 {
+            color: #e67e22;
         }
 
-        #long-i h2 {
-            color: #3cb4c6;
+        #long-o h2 {
+            color: #8e44ad;
         }
 
         .drop-zone p {
@@ -109,8 +101,8 @@
         }
 
         .draggable {
-            width: 100px;
-            height: 120px;
+            width: 110px;
+            height: 135px;
             background-color: white;
             border: 2px dashed #888;
             border-radius: 10px;
@@ -129,11 +121,13 @@
             cursor: grabbing;
         }
 
-        .draggable img {
-            width: 60px;
-            height: 60px;
+        /* Target both img and built-in SVG graphics reliably */
+        .draggable img, .draggable svg {
+            width: 70px;
+            height: 70px;
             object-fit: contain;
-            pointer-events: none; /* Prevents dragging just the image */
+            pointer-events: none; /* Prevents dragging just the asset */
+            margin-bottom: 5px;
         }
 
         /* Animations */
@@ -163,7 +157,7 @@
             border-style: solid;
         }
 
-        #action-btn {
+        #play-again {
             display: none;
             margin-top: 30px;
             padding: 15px 40px;
@@ -178,66 +172,103 @@
             transition: transform 0.2s;
         }
 
-        #action-btn:hover {
+        #play-again:hover {
             transform: scale(1.05);
         }
     </style>
 </head>
 <body>
 
-    <h1>Sorting: Short I and Long I</h1>
-    <div id="page-indicator">Page 1 of 2</div>
+    <h1>Sorting: Short O and Long O</h1>
     <p class="instructions">Click a picture to hear the word. Drag and drop the pictures into the correct column!</p>
 
     <div class="board">
-        <div class="drop-zone" id="short-i" data-target="short">
-            <h2>Short I</h2>
-            <p>Words with the<br>short i sound</p>
+        <div class="drop-zone" id="short-o" data-target="short">
+            <h2>Short O</h2>
+            <p>Words with the<br>short o sound</p>
             <div class="dropped-items"></div>
         </div>
 
-        <div class="drop-zone" id="long-i" data-target="long">
-            <h2>Long I</h2>
-            <p>Words with the<br>long i sound</p>
+        <div class="drop-zone" id="long-o" data-target="long">
+            <h2>Long O</h2>
+            <p>Words with the<br>long o sound</p>
             <div class="dropped-items"></div>
         </div>
     </div>
 
-    <div class="item-bank" id="item-bank"></div>
+    <div class="item-bank" id="item-bank">
+        <div class="draggable" draggable="true" id="item-box" data-type="short">
+            <svg viewBox="0 0 100 100">
+                <path d="M20,35 L50,20 L80,35 L50,50 Z" fill="#e5c19d"/>
+                <path d="M20,35 L50,50 L50,85 L20,70 Z" fill="#cd9a62"/>
+                <path d="M80,35 L50,50 L50,85 L80,70 Z" fill="#b37d45"/>
+                <path d="M35,27 L65,42 M50,20 L50,30" stroke="#845323" stroke-width="2" fill="none"/>
+            </svg>
+            <span>box</span>
+        </div>
 
-    <button id="action-btn" onclick="handleActionClick()">Next Page!</button>
+        <div class="draggable" draggable="true" id="item-boat" data-type="long">
+            <svg viewBox="0 0 100 100">
+                <path d="M15,60 L85,60 L73,80 L27,80 Z" fill="#964b00"/>
+                <line x1="50" y1="15" x2="50" y2="60" stroke="#5c2c16" stroke-width="4"/>
+                <path d="M50,15 L20,52 L50,52 Z" fill="#f0f0f0"/>
+                <path d="M53,18 L78,52 L53,52 Z" fill="#ff4d4d"/>
+                <path d="M10,60 Q50,68 90,60" stroke="#4cc9f0" stroke-width="3" fill="none"/>
+            </svg>
+            <span>boat</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-top" data-type="short">
+            <svg viewBox="0 0 100 100">
+                <rect x="46" y="12" width="8" height="12" rx="2" fill="#778da9"/>
+                <ellipse cx="50" cy="38" rx="35" ry="12" fill="#e63946"/>
+                <path d="M15,38 Q50,25 85,38 L50,82 Z" fill="#4ea8de"/>
+                <ellipse cx="50" cy="38" rx="25" ry="8" fill="#ffb703"/>
+                <rect x="48" y="82" width="4" height="8" rx="1" fill="#778da9"/>
+            </svg>
+            <span>top</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-rope" data-type="long">
+            <svg viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="24" fill="none" stroke="#ddb892" stroke-width="8" stroke-dasharray="14,5"/>
+                <circle cx="55" cy="46" r="22" fill="none" stroke="#b08968" stroke-width="7" stroke-dasharray="14,5"/>
+                <path d="M28,68 L12,84 M66,70 L82,86" stroke="#7f5539" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <span>rope</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-hot" data-type="short">
+            <svg viewBox="0 0 100 100">
+                <path d="M50,10 C50,10 78,45 78,68 C78,83 65,92 50,92 C35,92 22,83 22,68 C22,45 50,10 50,10 Z" fill="#ff4d4d"/>
+                <path d="M50,32 C50,32 68,55 68,72 C68,81 60,86 50,86 C40,86 32,81 32,72 C32,55 50,32 50,32 Z" fill="#ff9900"/>
+                <path d="M50,52 C50,52 58,68 58,76 C58,80 54,83 50,83 C46,83 42,80 42,76 C42,68 50,52 50,52 Z" fill="#ffcc00"/>
+            </svg>
+            <span>hot</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-coat" data-type="long">
+            <svg viewBox="0 0 100 100">
+                <path d="M30,25 L70,25 L88,52 L78,57 L72,45 L72,88 L28,88 L28,45 L22,57 L12,52 Z" fill="#4361ee"/>
+                <rect x="47" y="25" width="6" height="63" fill="#3f37c9"/>
+                <path d="M32,15 Q50,26 68,15 L72,25 L28,25 Z" fill="#f72585"/>
+                <circle cx="50" cy="42" r="3" fill="#ffb703"/>
+                <circle cx="50" cy="56" r="3" fill="#ffb703"/>
+                <circle cx="50" cy="70" r="3" fill="#ffb703"/>
+            </svg>
+            <span>coat</span>
+        </div>
+    </div>
+
+    <button id="play-again" onclick="resetGame()">Play Again!</button>
 
     <script>
-        // Game Pages Data Configuration
-        const gamePages = [
-            // Page 1 Words
-            [
-                { id: "item-kit", word: "kit", type: "short", img: "kit.png" },
-                { id: "item-kite", word: "kite", type: "long", img: "kite.png" },
-                { id: "item-rip", word: "rip", type: "short", img: "rip.png" },
-                { id: "item-ripe", word: "ripe", type: "long", img: "ripe.png" },
-                { id: "item-light", word: "light", type: "long", img: "light.png" },
-                { id: "item-sit", word: "sit", type: "short", img: "sit.png" }
-            ],
-            // Page 2 Words
-            [
-                { id: "item-tin", word: "tin", type: "short", img: "tin.png" },
-                { id: "item-mice", word: "mice", type: "long", img: "mice.png" },
-                { id: "item-lid", word: "lid", type: "short", img: "lid.png" },
-                { id: "item-bike", word: "bike", type: "long", img: "bike.png" },
-                { id: "item-pig", word: "pig", type: "short", img: "pig.png" },
-                { id: "item-fire", word: "fire", type: "long", img: "fire.png" }
-            ]
-        ];
-
-        let currentPageIndex = 0;
-        let totalItems = 0;
-        let correctlyPlaced = 0;
-
-        const itemBank = document.getElementById('item-bank');
+        const draggables = document.querySelectorAll('.draggable');
         const dropZones = document.querySelectorAll('.drop-zone');
-        const actionBtn = document.getElementById('action-btn');
-        const pageIndicator = document.getElementById('page-indicator');
+        const itemBank = document.getElementById('item-bank');
+        const playAgainBtn = document.getElementById('play-again');
+        let totalItems = draggables.length;
+        let correctlyPlaced = 0;
 
         // --- Audio Setup ---
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -268,59 +299,19 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // --- Setup Page Level ---
-        function loadPage(pageIndex) {
-            // Reset counters
-            correctlyPlaced = 0;
-            actionBtn.style.display = "none";
-            
-            // Update Text Indicators
-            pageIndicator.innerText = `Page ${pageIndex + 1} of ${gamePages.length}`;
-            
-            // Clear drop zones
-            dropZones.forEach(zone => {
-                zone.querySelector('.dropped-items').innerHTML = '';
-            });
-
-            // Clear and populate Item Bank
-            itemBank.innerHTML = '';
-            const currentWords = gamePages[pageIndex];
-            totalItems = currentWords.length;
-
-            // Generate items dynamically
-            currentWords.forEach(item => {
-                const element = document.createElement('div');
-                element.className = 'draggable';
-                element.setAttribute('draggable', 'true');
-                element.id = item.id;
-                element.setAttribute('data-type', item.type);
-
-                element.innerHTML = `
-                    <img src="${item.img}" alt="${item.word}">
-                    <span>${item.word}</span>
-                `;
-
-                // Add Click Event to hear the word
-                element.addEventListener('click', () => {
-                    speakWord(item.word);
-                });
-
-                // Add Drag Start Event
-                element.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', element.id);
-                    element.classList.remove('shake', 'pop'); 
-                });
-
-                itemBank.appendChild(element);
-            });
-
-            // Randomize order inside the item bank
-            for (let i = itemBank.children.length; i >= 0; i--) {
-                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
-            }
-        }
-
         // --- Drag and Drop Logic ---
+        draggables.forEach(draggable => {
+            draggable.addEventListener('click', () => {
+                const word = draggable.querySelector('span').innerText;
+                speakWord(word);
+            });
+
+            draggable.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', draggable.id);
+                draggable.classList.remove('shake', 'pop'); 
+            });
+        });
+
         dropZones.forEach(zone => {
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault(); 
@@ -330,22 +321,17 @@
                 e.preventDefault();
                 const draggableId = e.dataTransfer.getData('text/plain');
                 const draggableElement = document.getElementById(draggableId);
-                
-                if (!draggableElement) return;
-
                 const itemType = draggableElement.getAttribute('data-type');
                 const zoneType = zone.getAttribute('data-target');
 
                 if (itemType === zoneType) {
-                    // Correct Drop
                     speakWord("Correct!");
                     zone.querySelector('.dropped-items').appendChild(draggableElement);
                     draggableElement.classList.add('pop');
-                    draggableElement.setAttribute('draggable', 'false'); // Lock it
+                    draggableElement.setAttribute('draggable', 'false'); 
                     correctlyPlaced++;
                     checkWin();
                 } else {
-                    // Wrong Drop
                     playWrongSound();
                     draggableElement.classList.add('shake');
                     
@@ -359,32 +345,28 @@
         function checkWin() {
             if (correctlyPlaced === totalItems) {
                 setTimeout(() => {
-                    if (currentPageIndex < gamePages.length - 1) {
-                        speakWord("Great job! You finished this page!");
-                        actionBtn.innerText = "Next Page!";
-                    } else {
-                        speakWord("Great job! You sorted all the words!");
-                        actionBtn.innerText = "Play Again!";
-                    }
-                    actionBtn.style.display = "inline-block";
+                    speakWord("Great job! You sorted all the O words!");
+                    playAgainBtn.style.display = "inline-block";
                 }, 1000);
             }
         }
 
-        function handleActionClick() {
-            if (currentPageIndex < gamePages.length - 1) {
-                // Move to Page 2
-                currentPageIndex++;
-                loadPage(currentPageIndex);
-            } else {
-                // Reset back to Page 1
-                currentPageIndex = 0;
-                loadPage(currentPageIndex);
+        function resetGame() {
+            correctlyPlaced = 0;
+            playAgainBtn.style.display = "none";
+            
+            draggables.forEach(draggable => {
+                itemBank.appendChild(draggable);
+                draggable.setAttribute('draggable', 'true');
+                draggable.classList.remove('pop', 'shake');
+            });
+            
+            for (let i = itemBank.children.length; i >= 0; i--) {
+                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
             }
         }
 
-        // Initialize the game with the first page load
-        loadPage(currentPageIndex);
+        resetGame();
     </script>
 </body>
 </html>
