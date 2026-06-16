@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Short U and Long U Sorting</title>
+    <title>/ch/ and /c/ Sound Sorting</title>
     <style>
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
@@ -46,13 +46,15 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        /* Distinct border colors for Short U and Long U */
-        #short-u {
-            border-color: #27ae60; /* Vibrant Green */
+        /* Distinct border colors for /ch/ and /c/ to match the image */
+        #sound-ch {
+            border-color: #246b73; /* Teal */
+            background-color: #c9e4e6;
         }
         
-        #long-u {
-            border-color: #2980b9; /* Vibrant Blue */
+        #sound-c {
+            border-color: #d67963; /* Coral */
+            background-color: #f7d2c6;
         }
 
         .drop-zone h2 {
@@ -60,18 +62,18 @@
             margin: 10px 0 5px 0;
         }
 
-        #short-u h2 {
-            color: #27ae60;
+        #sound-ch h2 {
+            color: #246b73;
         }
 
-        #long-u h2 {
-            color: #2980b9;
+        #sound-c h2 {
+            color: #d67963;
         }
 
         .drop-zone p {
             margin: 0 0 20px 0;
             font-size: 1.2em;
-            color: #666;
+            color: #444;
             border-bottom: 2px solid #ccc;
             padding-bottom: 10px;
             width: 80%;
@@ -178,53 +180,53 @@
 </head>
 <body>
 
-    <h1>Sorting: Short U and Long U</h1>
+    <h1>Sorting: /ch/ and /c/ Sounds</h1>
     <p class="instructions">Click a picture to hear the word. Drag and drop the pictures into the correct column!</p>
 
     <div class="board">
-        <div class="drop-zone" id="short-u" data-target="short">
-            <h2>Short U</h2>
-            <p>Words with the<br>short u sound</p>
+        <div class="drop-zone" id="sound-ch" data-target="ch">
+            <h2>/ch/ sound</h2>
+            <p>Words starting with<br>the /ch/ sound</p>
             <div class="dropped-items"></div>
         </div>
 
-        <div class="drop-zone" id="long-u" data-target="long">
-            <h2>Long U</h2>
-            <p>Words with the<br>long u sound</p>
+        <div class="drop-zone" id="sound-c" data-target="c">
+            <h2>/c/ sound</h2>
+            <p>Words starting with<br>the /c/ sound</p>
             <div class="dropped-items"></div>
         </div>
     </div>
 
     <div class="item-bank" id="item-bank">
         
-        <div class="draggable" draggable="true" id="item-sun" data-type="short">
-            <img src="https://img.icons8.com/color/96/000000/sun--v1.png" alt="sun">
-            <span>sun</span>
+        <div class="draggable" draggable="true" id="item-chair" data-type="ch">
+            <img src="https://img.icons8.com/color/96/000000/chair.png" alt="chair">
+            <span>chair</span>
         </div>
 
-        <div class="draggable" draggable="true" id="item-bug" data-type="short">
-            <img src="https://img.icons8.com/color/96/000000/bug.png" alt="bug">
-            <span>bug</span>
+        <div class="draggable" draggable="true" id="item-cat" data-type="c">
+            <img src="https://img.icons8.com/color/96/000000/cat.png" alt="cat">
+            <span>cat</span>
         </div>
 
-        <div class="draggable" draggable="true" id="item-cup" data-type="short">
-            <img src="https://img.icons8.com/color/96/000000/coffee-cup.png" alt="cup">
+        <div class="draggable" draggable="true" id="item-cheese" data-type="ch">
+            <img src="https://img.icons8.com/color/96/000000/cheese.png" alt="cheese">
+            <span>cheese</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-car" data-type="c">
+            <img src="https://img.icons8.com/color/96/000000/car--v1.png" alt="car">
+            <span>car</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-chick" data-type="ch">
+            <img src="https://api.iconify.design/noto:front-facing-baby-chick.svg" alt="chick">
+            <span>chick</span>
+        </div>
+
+        <div class="draggable" draggable="true" id="item-cup" data-type="c">
+            <img src="https://api.iconify.design/noto:teacup-without-handle.svg" alt="cup">
             <span>cup</span>
-        </div>
-
-        <div class="draggable" draggable="true" id="item-cube" data-type="long">
-            <img src="https://img.icons8.com/color/96/000000/sugar-cube.png" alt="cube">
-            <span>cube</span>
-        </div>
-
-        <div class="draggable" draggable="true" id="item-tube" data-type="long">
-            <img src="https://img.icons8.com/color/96/000000/test-tube.png" alt="tube">
-            <span>tube</span>
-        </div>
-
-        <div class="draggable" draggable="true" id="item-glue" data-type="long">
-            <img src="https://img.icons8.com/color/96/000000/glue.png" alt="glue">
-            <span>glue</span>
         </div>
 
     </div>
@@ -314,7 +316,7 @@
         function checkWin() {
             if (correctlyPlaced === totalItems) {
                 setTimeout(() => {
-                    speakWord("Great job! You sorted all the U words!");
+                    speakWord("Great job! You sorted all the words!");
                     playAgainBtn.style.display = "inline-block";
                 }, 1000);
             }
