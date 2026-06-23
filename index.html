@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>/ch/ and /c/ Sound Sorting</title>
+    <title>/sh/ and /s/ Sound Sorting</title>
     <style>
         body {
             font-family: 'Comic Sans MS', 'Chalkboard SE', sans-serif;
@@ -31,6 +31,7 @@
             justify-content: center;
             gap: 40px;
             margin-bottom: 40px;
+            flex-wrap: wrap;
         }
 
         .drop-zone {
@@ -46,12 +47,14 @@
             box-shadow: 0 8px 15px rgba(0,0,0,0.1);
         }
 
-        #sound-ch {
+        /* Teal for /sh/ */
+        #sound-sh {
             border-color: #246b73;
             background-color: #c9e4e6;
         }
         
-        #sound-c {
+        /* Orange/Salmon for /s/ */
+        #sound-s {
             border-color: #d67963;
             background-color: #f7d2c6;
         }
@@ -61,8 +64,8 @@
             margin: 10px 0 5px 0;
         }
 
-        #sound-ch h2 { color: #246b73; }
-        #sound-c h2 { color: #d67963; }
+        #sound-sh h2 { color: #246b73; }
+        #sound-s h2 { color: #d67963; }
 
         .drop-zone p {
             margin: 0 0 20px 0;
@@ -79,6 +82,7 @@
             justify-content: center;
             gap: 10px;
             width: 100%;
+            min-height: 200px;
         }
 
         .item-bank {
@@ -97,7 +101,7 @@
 
         .draggable {
             width: 110px;
-            height: 110px; /* Adjusted height since text is removed */
+            height: 110px;
             background-color: white;
             border: 2px dashed #888;
             border-radius: 10px;
@@ -108,17 +112,18 @@
             justify-content: center;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.2s;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
         }
 
         .draggable:active {
             cursor: grabbing;
         }
 
-        .draggable img {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            pointer-events: none; 
+        .draggable span.emoji {
+            font-size: 3em; /* Make the emoji big like a picture */
+            pointer-events: none;
         }
 
         /* Animations */
@@ -134,11 +139,12 @@
         .shake {
             animation: shake 0.5s;
             border-color: red !important;
+            background-color: #ffe6e6;
         }
 
         @keyframes pop {
             0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+            50% { transform: scale(1.15); }
             100% { transform: scale(1); }
         }
 
@@ -146,6 +152,7 @@
             animation: pop 0.5s;
             border-color: #4CAF50 !important;
             border-style: solid;
+            background-color: #e6ffe6;
         }
 
         .controls {
@@ -153,6 +160,15 @@
             display: none; /* Hidden until puzzle is solved */
             justify-content: center;
             gap: 20px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .congrats {
+            color: #4CAF50;
+            font-size: 2em;
+            font-weight: bold;
+            margin: 0;
         }
 
         .btn {
@@ -165,175 +181,108 @@
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
             transition: transform 0.2s;
+            background-color: #4CAF50;
         }
 
         .btn:hover {
             transform: scale(1.05);
         }
 
-        #play-again { background-color: #4CAF50; }
-        #next-page { background-color: #2196F3; }
-
     </style>
 </head>
 <body>
 
-    <h1 id="level-title">Sorting: /ch/ and /c/ Sounds</h1>
-    <p class="instructions">Click a picture to hear the word. Drag and drop the pictures into the correct column!</p>
+    <h1 id="level-title">Sorting: /sh/ and /s/ Sounds</h1>
+    <p class="instructions">Drag and drop the pictures into the correct column!</p>
 
     <div class="board">
-        <div class="drop-zone" id="sound-ch" data-target="ch">
-            <h2>/ch/ sound</h2>
-            <p>Words starting with<br>the /ch/ sound</p>
+        <div class="drop-zone" id="sound-sh" data-target="sh">
+            <h2>/sh/ sound</h2>
+            <p>Words starting with<br>the /sh/ sound</p>
             <div class="dropped-items"></div>
         </div>
 
-        <div class="drop-zone" id="sound-c" data-target="c">
-            <h2>/c/ sound</h2>
-            <p>Words starting with<br>the /c/ sound</p>
+        <div class="drop-zone" id="sound-s" data-target="s">
+            <h2>/s/ sound</h2>
+            <p>Words starting with<br>the /s/ sound</p>
             <div class="dropped-items"></div>
         </div>
     </div>
 
     <div class="item-bank" id="item-bank">
+        <div class="draggable" draggable="true" id="item-ship" data-target="sh">
+            <span class="emoji">🚢</span> Ship
         </div>
+        <div class="draggable" draggable="true" id="item-shoe" data-target="sh">
+            <span class="emoji">👟</span> Shoe
+        </div>
+        <div class="draggable" draggable="true" id="item-shell" data-target="sh">
+            <span class="emoji">🐚</span> Shell
+        </div>
+        
+        <div class="draggable" draggable="true" id="item-sun" data-target="s">
+            <span class="emoji">☀️</span> Sun
+        </div>
+        <div class="draggable" draggable="true" id="item-sock" data-target="s">
+            <span class="emoji">🧦</span> Sock
+        </div>
+        <div class="draggable" draggable="true" id="item-star" data-target="s">
+            <span class="emoji">⭐</span> Star
+        </div>
+    </div>
 
     <div class="controls" id="controls">
-        <button class="btn" id="play-again" onclick="resetCurrentLevel()">Play Again!</button>
-        <button class="btn" id="next-page" onclick="loadNextLevel()">Next Page ➡️</button>
+        <p class="congrats">Great job! You sorted them all!</p>
+        <button class="btn" id="play-again" onclick="resetGame()">Play Again 🔄</button>
     </div>
 
     <script>
         const itemBank = document.getElementById('item-bank');
         const dropZones = document.querySelectorAll('.drop-zone');
+        const draggables = document.querySelectorAll('.draggable');
         const controlsDiv = document.getElementById('controls');
-        const nextBtn = document.getElementById('next-page');
-        const levelTitle = document.getElementById('level-title');
-
-        // Define the levels and their items
-        const levels = [
-            [ // Level 1 (Original)
-                { id: 'chair', word: 'chair', type: 'ch', img: 'https://img.icons8.com/color/96/000000/chair.png' },
-                { id: 'cat', word: 'cat', type: 'c', img: 'https://img.icons8.com/color/96/000000/cat.png' },
-                { id: 'cheese', word: 'cheese', type: 'ch', img: 'https://img.icons8.com/color/96/000000/cheese.png' },
-                { id: 'car', word: 'car', type: 'c', img: 'https://img.icons8.com/color/96/000000/car--v1.png' },
-                { id: 'chick', word: 'chick', type: 'ch', img: 'https://api.iconify.design/noto:front-facing-baby-chick.svg' },
-                { id: 'cup', word: 'cup', type: 'c', img: 'https://api.iconify.design/noto:teacup-without-handle.svg' }
-            ],
-            [ // Level 2 (New Words)
-                { id: 'chips', word: 'chips', type: 'ch', img: 'https://img.icons8.com/color/96/000000/potato-chips.png' },
-                { id: 'cow', word: 'cow', type: 'c', img: 'https://img.icons8.com/color/96/000000/cow.png' },
-                { id: 'church', word: 'church', type: 'ch', img: 'https://img.icons8.com/color/96/000000/church.png' },
-                { id: 'cake', word: 'cake', type: 'c', img: 'https://img.icons8.com/color/96/000000/cake.png' },
-                { id: 'chipmunk', word: 'chipmunk', type: 'ch', img: 'https://api.iconify.design/noto:chipmunk.svg' },
-                { id: 'clock', word: 'clock', type: 'c', img: 'https://img.icons8.com/color/96/000000/clock--v1.png' }
-            ]
-        ];
-
-        let currentLevel = 0;
-        let totalItems = 0;
+        
         let correctlyPlaced = 0;
+        const totalItems = draggables.length;
 
-        // --- Audio Setup ---
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playWrongSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const oscillator = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(150, audioCtx.currentTime);
-            oscillator.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.3);
-            
-            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
-            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            
-            oscillator.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.3);
-        }
-
-        function speakWord(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9; 
-            utterance.pitch = 1.2; 
-            window.speechSynthesis.speak(utterance);
-        }
-
-        // --- Game Setup Logic ---
-        function loadLevel(levelIndex) {
-            itemBank.innerHTML = '';
-            document.querySelectorAll('.dropped-items').forEach(zone => zone.innerHTML = '');
-            controlsDiv.style.display = 'none';
-            correctlyPlaced = 0;
-
-            const levelData = levels[levelIndex];
-            totalItems = levelData.length;
-            levelTitle.innerText = `Sorting: /ch/ and /c/ Sounds (Page ${levelIndex + 1})`;
-
-            // Toggle Next Page button visibility based on level
-            nextBtn.style.display = (levelIndex < levels.length - 1) ? 'inline-block' : 'none';
-
-            // Generate items
-            levelData.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'draggable';
-                div.draggable = true;
-                div.id = 'item-' + item.id;
-                div.setAttribute('data-type', item.type);
-                div.setAttribute('data-word', item.word); // Storing the word for TTS
-
-                const img = document.createElement('img');
-                img.src = item.img;
-                img.alt = item.word;
-
-                div.appendChild(img);
-                itemBank.appendChild(div);
-
-                // Add Event Listeners to new element
-                div.addEventListener('click', () => {
-                    speakWord(div.getAttribute('data-word'));
-                });
-
-                div.addEventListener('dragstart', (e) => {
-                    e.dataTransfer.setData('text/plain', div.id);
-                    div.classList.remove('shake', 'pop'); 
-                });
+        // 1. Setup Draggable Items
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', (e) => {
+                // Store the ID of the dragged item
+                e.dataTransfer.setData('text/plain', draggable.id);
+                // Remove animation classes if they exist
+                draggable.classList.remove('shake', 'pop'); 
             });
+        });
 
-            // Randomize items in the bank
-            for (let i = itemBank.children.length; i >= 0; i--) {
-                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
-            }
-        }
-
-        // --- Drag and Drop Logic ---
+        // 2. Setup Drop Zones
         dropZones.forEach(zone => {
+            // Allow items to be dropped here
             zone.addEventListener('dragover', (e) => {
                 e.preventDefault(); 
             });
 
+            // Handle the drop event
             zone.addEventListener('drop', (e) => {
                 e.preventDefault();
                 const draggableId = e.dataTransfer.getData('text/plain');
                 if (!draggableId) return;
 
                 const draggableElement = document.getElementById(draggableId);
-                const itemType = draggableElement.getAttribute('data-type');
+                const itemType = draggableElement.getAttribute('data-target');
                 const zoneType = zone.getAttribute('data-target');
 
+                // Check if they match
                 if (itemType === zoneType) {
-                    speakWord("Correct!");
+                    // Correct! Move to drop zone
                     zone.querySelector('.dropped-items').appendChild(draggableElement);
                     draggableElement.classList.add('pop');
-                    draggableElement.setAttribute('draggable', 'false'); 
+                    draggableElement.setAttribute('draggable', 'false'); // Lock it in place
+                    draggableElement.style.cursor = 'default';
                     correctlyPlaced++;
                     checkWin();
                 } else {
-                    playWrongSound();
+                    // Incorrect! Shake and bounce back
                     draggableElement.classList.add('shake');
                     setTimeout(() => {
                         draggableElement.classList.remove('shake');
@@ -342,28 +291,37 @@
             });
         });
 
+        // 3. Check for Game Completion
         function checkWin() {
             if (correctlyPlaced === totalItems) {
                 setTimeout(() => {
-                    speakWord("Great job! You sorted all the pictures!");
                     controlsDiv.style.display = "flex";
-                }, 1000);
+                }, 500);
             }
         }
 
-        function resetCurrentLevel() {
-            loadLevel(currentLevel);
-        }
-
-        function loadNextLevel() {
-            if (currentLevel < levels.length - 1) {
-                currentLevel++;
-                loadLevel(currentLevel);
+        // 4. Reset Game Function
+        function resetGame() {
+            // Move all items back to the bank
+            draggables.forEach(draggable => {
+                itemBank.appendChild(draggable);
+                draggable.setAttribute('draggable', 'true');
+                draggable.style.cursor = 'grab';
+                draggable.classList.remove('pop', 'shake');
+            });
+            
+            // Shuffle the items randomly in the bank
+            for (let i = itemBank.children.length; i >= 0; i--) {
+                itemBank.appendChild(itemBank.children[Math.random() * i | 0]);
             }
+
+            // Reset variables and hide controls
+            correctlyPlaced = 0;
+            controlsDiv.style.display = 'none';
         }
 
-        // Initialize first level
-        loadLevel(currentLevel);
+        // Shuffle items on page load
+        resetGame();
     </script>
 </body>
 </html>
